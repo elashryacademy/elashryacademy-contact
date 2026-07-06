@@ -1,0 +1,129 @@
+/* ============================================================
+   El Ashry Academy - Theme Variables
+   ============================================================
+   كل ألوان الموقع وخطوطه بتيجي من هنا.
+   لوحة الإدارة بتعدّل على --primary و --accent و --bg بشكل ديناميكي.
+   ============================================================ */
+
+:root {
+  /* ===== Brand colors (default) ===== */
+  --primary:        #00255F;
+  --primary-rgb:    0, 37, 95;
+  --accent:         #FFBA00;
+  --accent-rgb:     255, 186, 0;
+  --accent-soft:    #FFD54F;
+
+  /* ===== Gradients ===== */
+  --grad-primary:   linear-gradient(135deg, #00255F 0%, #001A47 100%);
+  --grad-accent:    linear-gradient(135deg, #FFD54F 0%, #FFBA00 50%, #F09000 100%);
+  --grad-mix:       linear-gradient(135deg, #00255F 0%, #4a148c 50%, #FFBA00 100%);
+
+  /* ===== Typography ===== */
+  --font-family:    'Cairo', 'Tajawal', 'Segoe UI', system-ui, sans-serif;
+  --font-display:   'Cairo', 'Tajawal', sans-serif;
+  --fs-xs:          0.75rem;
+  --fs-sm:          0.875rem;
+  --fs-base:        1rem;
+  --fs-lg:          1.125rem;
+  --fs-xl:          1.25rem;
+  --fs-2xl:         1.5rem;
+  --fs-3xl:         2rem;
+  --fs-4xl:         2.75rem;
+  --fs-5xl:         3.5rem;
+
+  /* ===== Spacing ===== */
+  --space-1:  0.25rem;
+  --space-2:  0.5rem;
+  --space-3:  1rem;
+  --space-4:  1.5rem;
+  --space-5:  2rem;
+  --space-6:  3rem;
+  --space-7:  4rem;
+
+  /* ===== Radii ===== */
+  --radius-sm: 8px;
+  --radius:    16px;
+  --radius-lg: 24px;
+  --radius-full: 999px;
+
+  /* ===== Shadow ===== */
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.15);
+  --shadow:    0 8px 24px rgba(0,0,0,0.25);
+  --shadow-lg: 0 16px 48px rgba(0,0,0,0.35);
+  --shadow-glow: 0 0 32px rgba(var(--accent-rgb), 0.35);
+
+  /* ===== Layout ===== */
+  --max-width: 720px;
+  --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* ===== Button Style ===== */
+  --btn-style: glass; /* glass | solid | gradient */
+}
+
+/* ============================================================
+   Dark Theme (default)
+   ============================================================ */
+[data-theme="dark"] {
+  --bg:                 #0a0f1f;
+  --bg-2:               #0f1629;
+  --surface:            rgba(255, 255, 255, 0.05);
+  --surface-2:          rgba(255, 255, 255, 0.08);
+  --surface-hover:      rgba(255, 255, 255, 0.12);
+  --border:             rgba(255, 255, 255, 0.1);
+  --border-strong:      rgba(255, 186, 0, 0.35);
+  --text:               #ffffff;
+  --text-soft:          rgba(255, 255, 255, 0.75);
+  --text-muted:         rgba(255, 255, 255, 0.5);
+  --bg-grid-color:      rgba(255, 186, 0, 0.04);
+  --particles-color:    rgba(255, 186, 0, 0.5);
+  --loader-bg:          #0a0f1f;
+  color-scheme: dark;
+}
+
+/* ============================================================
+   Light Theme
+   ============================================================ */
+[data-theme="light"] {
+  --bg:                 #f5f7fb;
+  --bg-2:               #e8edf5;
+  --surface:            rgba(0, 37, 95, 0.04);
+  --surface-2:          rgba(0, 37, 95, 0.07);
+  --surface-hover:      rgba(0, 37, 95, 0.1);
+  --border:             rgba(0, 37, 95, 0.12);
+  --border-strong:      rgba(0, 37, 95, 0.25);
+  --text:               #0a0f1f;
+  --text-soft:          rgba(10, 15, 31, 0.78);
+  --text-muted:         rgba(10, 15, 31, 0.5);
+  --bg-grid-color:      rgba(0, 37, 95, 0.05);
+  --particles-color:    rgba(0, 37, 95, 0.35);
+  --loader-bg:          #f5f7fb;
+  color-scheme: light;
+}
+
+/* ============================================================
+   Reduced Motion
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Animation-level: reduced (set via JS) */
+[data-anim="reduced"] *,
+[data-anim="reduced"] *::before,
+[data-anim="reduced"] *::after {
+  animation-duration: 0.01ms !important;
+  transition-duration: 0.01ms !important;
+}
+/* Animation-level: off */
+[data-anim="off"] *,
+[data-anim="off"] *::before,
+[data-anim="off"] *::after {
+  animation: none !important;
+  transition: none !important;
+}

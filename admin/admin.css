@@ -1,0 +1,246 @@
+/* ============================================================
+   El Ashry Academy - Admin Panel Styles
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; min-height: 100vh; }
+
+.admin {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.admin__header,
+.admin__nav,
+.admin__content,
+.admin__save-bar {
+  padding: 1rem 1.25rem;
+  border-radius: var(--radius-lg);
+}
+
+/* Header */
+.admin__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.admin__brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.admin__brand img { border-radius: 12px; }
+.admin__brand h1 { margin: 0; font-size: 1.2rem; color: var(--text); }
+.admin__brand p { margin: 0; font-size: 0.8rem; color: var(--text-muted); }
+.admin__actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+.admin__actions .btn { padding: 0.5rem 1rem; font-size: 0.85rem; }
+
+/* Nav */
+.admin__nav {
+  display: flex;
+  gap: 0.25rem;
+  flex-wrap: wrap;
+  padding: 0.5rem;
+}
+.admin__nav button {
+  padding: 0.55rem 1rem;
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--text-soft);
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: all var(--transition);
+}
+.admin__nav button:hover { background: var(--surface); color: var(--text); }
+.admin__nav button.is-active {
+  background: var(--accent);
+  color: var(--primary);
+}
+
+/* Content */
+.admin__content {
+  min-height: 60vh;
+}
+.admin__content section { display: none; animation: fadeUp 0.4s ease both; }
+.admin__content section.is-active { display: block; }
+.admin__content h2 {
+  margin: 0 0 1rem;
+  font-size: 1.3rem;
+  color: var(--text);
+  border-bottom: 2px solid var(--border);
+  padding-bottom: 0.5rem;
+}
+.hint {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.75rem 1rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+}
+
+/* Form */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+.form-grid label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  color: var(--text-soft);
+  font-weight: 600;
+}
+.form-grid label.full { grid-column: 1 / -1; }
+.form-grid input[type="text"],
+.form-grid input[type="url"],
+.form-grid textarea,
+.form-grid select {
+  width: 100%;
+  padding: 0.6rem 0.8rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.9rem;
+  transition: border-color var(--transition);
+}
+.form-grid input:focus,
+.form-grid textarea:focus,
+.form-grid select:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+.form-grid input[type="color"] {
+  width: 100%;
+  height: 42px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  cursor: pointer;
+}
+.upload-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+.upload-row input[type="text"] { flex: 1; }
+.upload-row input[type="file"] {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+.preview {
+  margin-top: 0.5rem;
+  max-width: 100px;
+  max-height: 100px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  display: none;
+}
+.preview:not([src=""]) { display: block; }
+
+/* Platforms list */
+.platforms-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.platforms-list li {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.65rem 0.9rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  cursor: grab;
+  user-select: none;
+  transition: border-color var(--transition), transform var(--transition);
+}
+.platforms-list li.dragging {
+  opacity: 0.5;
+  border-color: var(--accent);
+}
+.platforms-list li.drag-over {
+  border-color: var(--accent);
+  transform: translateY(2px);
+}
+.platforms-list .drag-handle {
+  cursor: grab;
+  color: var(--text-muted);
+  font-size: 1.2rem;
+}
+.platforms-list .platform-color {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+.platforms-list .platform-name {
+  flex: 1;
+  font-weight: 600;
+  color: var(--text);
+}
+.platforms-list input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+/* Save bar */
+.admin__save-bar {
+  position: sticky;
+  bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  z-index: 50;
+}
+#saveStatus {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+/* Toast */
+.toast {
+  position: fixed;
+  bottom: 5rem;
+  left: 50%;
+  transform: translate(-50%, 120%);
+  padding: 0.65rem 1.25rem;
+  background: var(--surface-2);
+  color: var(--text);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-full);
+  font-size: 0.85rem;
+  font-weight: 600;
+  backdrop-filter: blur(16px);
+  z-index: 2000;
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.toast.is-visible { transform: translate(-50%, 0); }
+
+/* Responsive */
+@media (max-width: 640px) {
+  .form-grid { grid-template-columns: 1fr; }
+  .admin__header { flex-direction: column; align-items: stretch; }
+  .admin__actions { justify-content: stretch; }
+  .admin__actions .btn { flex: 1; }
+}

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>لوحة الإدارة | El Ashry Academy</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" type="image/svg+xml" href="../assets/images/favicon.svg" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" />
+  <link rel="stylesheet" href="../assets/css/themes.css" />
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <link rel="stylesheet" href="admin.css" />
+</head>
+<body>
+  <div class="bg-gradient" aria-hidden="true"></div>
+
+  <div class="admin">
+    <header class="admin__header glass">
+      <div class="admin__brand">
+        <img src="../assets/images/Logo.png" alt="logo" width="40" height="40" />
+        <div>
+          <h1>لوحة الإدارة</h1>
+          <p>El Ashry Academy — Admin Panel</p>
+        </div>
+      </div>
+      <div class="admin__actions">
+        <a href="../" class="btn btn--ghost">عرض الموقع</a>
+        <button id="exportBtn" class="btn btn--primary">Export</button>
+        <label class="btn btn--ghost">
+          Import
+          <input type="file" id="importInput" accept="application/json" hidden />
+        </label>
+        <button id="resetBtn" class="btn btn--ghost">إعادة تعيين</button>
+      </div>
+    </header>
+
+    <nav class="admin__nav glass">
+      <button data-tab="basic" class="is-active">المعلومات الأساسية</button>
+      <button data-tab="links">روابط التواصل</button>
+      <button data-tab="images">الصور</button>
+      <button data-tab="appearance">المظهر</button>
+      <button data-tab="platforms">ترتيب وإظهار المنصات</button>
+    </nav>
+
+    <main class="admin__content glass">
+
+      <!-- ============ TAB: BASIC ============ -->
+      <section data-panel="basic" class="is-active">
+        <h2>المعلومات الأساسية</h2>
+        <div class="form-grid">
+          <label>اسم الأكاديمية (إنجليزي)
+            <input type="text" data-key="academyName" />
+          </label>
+          <label>اسم الأكاديمية (عربي)
+            <input type="text" data-key="academyNameAr" />
+          </label>
+          <label>اسم صاحب الأكاديمية (عربي)
+            <input type="text" data-key="ownerName" />
+          </label>
+          <label>اسم صاحب الأكاديمية (إنجليزي)
+            <input type="text" data-key="ownerNameEn" />
+          </label>
+          <label class="full">الشعار النصي
+            <input type="text" data-key="slogan" />
+          </label>
+          <label class="full">النبذة
+            <textarea data-key="bio" rows="4"></textarea>
+          </label>
+        </div>
+      </section>
+
+      <!-- ============ TAB: LINKS ============ -->
+      <section data-panel="links">
+        <h2>روابط التواصل</h2>
+        <p class="hint">سيظهر Popup لكل منصة لو الرابط فاضي أو Placeholder.</p>
+        <div class="form-grid" id="linksGrid">
+          <!-- filled by JS -->
+        </div>
+      </section>
+
+      <!-- ============ TAB: IMAGES ============ -->
+      <section data-panel="images">
+        <h2>الصور</h2>
+        <div class="form-grid">
+          <label class="full">اللوجو
+            <div class="upload-row">
+              <input type="text" data-key="logo" placeholder="assets/images/Logo.png أو رابط" />
+              <input type="file" accept="image/*" data-file="logo" />
+            </div>
+            <img id="preview-logo" class="preview" alt="logo preview" />
+          </label>
+          <label class="full">الصورة الشخصية
+            <div class="upload-row">
+              <input type="text" data-key="profileImage" placeholder="URL أو رفع ملف" />
+              <input type="file" accept="image/*" data-file="profileImage" />
+            </div>
+            <img id="preview-profileImage" class="preview" alt="preview" />
+          </label>
+          <label class="full">صورة الغلاف
+            <div class="upload-row">
+              <input type="text" data-key="coverImage" placeholder="URL أو رفع ملف" />
+              <input type="file" accept="image/*" data-file="coverImage" />
+            </div>
+            <img id="preview-coverImage" class="preview" alt="preview" />
+          </label>
+        </div>
+      </section>
+
+      <!-- ============ TAB: APPEARANCE ============ -->
+      <section data-panel="appearance">
+        <h2>المظهر</h2>
+        <div class="form-grid">
+          <label>الوضع
+            <select data-key="theme.mode">
+              <option value="dark">داكن</option>
+              <option value="light">فاتح</option>
+              <option value="auto">تلقائي</option>
+            </select>
+          </label>
+          <label>نمط الأزرار
+            <select data-key="theme.buttonStyle">
+              <option value="glass">زجاجي</option>
+              <option value="solid">صلب</option>
+              <option value="gradient">تدرّج</option>
+            </select>
+          </label>
+          <label>مستوى الأنيميشن
+            <select data-key="theme.animationLevel">
+              <option value="full">كامل</option>
+              <option value="reduced">مخفّف</option>
+              <option value="off">إيقاف</option>
+            </select>
+          </label>
+          <label>اللون الأساسي
+            <input type="color" data-key="theme.primaryColor" />
+          </label>
+          <label>اللون المميّز
+            <input type="color" data-key="theme.accentColor" />
+          </label>
+          <label>لون الخلفية
+            <input type="color" data-key="theme.backgroundColor" />
+          </label>
+          <label class="full">الخط
+            <select data-key="theme.fontFamily">
+              <option value="'Cairo', 'Tajawal', sans-serif">Cairo / Tajawal</option>
+              <option value="'Tajawal', sans-serif">Tajawal</option>
+              <option value="'Segoe UI', sans-serif">Segoe UI</option>
+              <option value="'Arial', sans-serif">Arial</option>
+              <option value="system-ui">System UI</option>
+            </select>
+          </label>
+        </div>
+      </section>
+
+      <!-- ============ TAB: PLATFORMS ============ -->
+      <section data-panel="platforms">
+        <h2>ترتيب وإظهار المنصات</h2>
+        <p class="hint">اسحب وأفلت لإعادة الترتيب. فعّل/أوقف أي منصة.</p>
+        <ul id="platformsList" class="platforms-list">
+          <!-- filled by JS -->
+        </ul>
+      </section>
+
+    </main>
+
+    <div class="admin__save-bar glass">
+      <span id="saveStatus">كل التعديلات بتتخزن تلقائيًا</span>
+      <button id="saveBtn" class="btn btn--primary">حفظ ونشر</button>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="../assets/js/config.js"></script>
+  <script src="../assets/js/theme.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>
