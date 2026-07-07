@@ -1,20 +1,21 @@
 {
   "name": "El Ashry Academy",
   "short_name": "El Ashry",
-  "description": "أكاديمية العشري - منصة تعليمية هندسية احترافية. اتعلّم صح... وطبّق بإيدك... واحتَرِف.",
+  "description": "El Ashry Academy — أكاديمية العشري. الصفحة الرسمية للتواصل.",
   "lang": "ar",
   "dir": "rtl",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait-primary",
-  "background_color": "#0a0f1f",
-  "theme_color": "#00255F",
+  "background_color": "#070B16",
+  "theme_color": "#002662",
   "icons": [
     { "src": "assets/images/android-chrome-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
     { "src": "assets/images/android-chrome-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" },
-    { "src": "assets/images/apple-touch-icon.png", "sizes": "180x180", "type": "image/png" },
-    { "src": "assets/images/favicon.svg", "sizes": "any", "type": "image/svg+xml" }
+    { "src": "assets/images/apple-touch-icon.png",   "sizes": "180x180", "type": "image/png" },
+    { "src": "assets/images/EA-Icon.png",            "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "assets/images/favicon.svg",            "sizes": "any",    "type": "image/svg+xml" }
   ],
-  "categories": ["education", "productivity"]
+  "categories": ["education", "business", "productivity"]
 }

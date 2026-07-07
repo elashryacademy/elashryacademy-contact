@@ -1,19 +1,20 @@
-/* ============================================================
-   El Ashry Academy - Particles Background
-   ============================================================
-   Particles خفيفة على Canvas، بتتوقف تلقائيًا لو:
-   - prefers-reduced-motion
-   - أو مستوى الأنيميشن "reduced" / "off"
-   ============================================================ */
+/**
+ * ============================================================
+ *  El Ashry Academy — Particles Background
+ * ============================================================
+ *  Particles خفيفة على Canvas. بتتوقف تلقائيًا لو:
+ *    - prefers-reduced-motion
+ *    - data-anim = reduced | off
+ *    - particlesEnabled = false في الإعدادات
+ * ============================================================ */
 (function () {
   "use strict";
 
-  function initParticles() {
+  function init() {
     const canvas = document.getElementById("particles");
     if (!canvas) return;
-    const ctx = canvas.getContext("2d");
 
-    // تحقق من مستوى الأنيميشن
+    // تحقق من الإعدادات
     const animLevel = document.documentElement.getAttribute("data-anim");
     if (animLevel === "off" || animLevel === "reduced") {
       canvas.style.display = "none";
@@ -23,34 +24,44 @@
       canvas.style.display = "none";
       return;
     }
+    // التحقق من إعداد الموقع
+    if (window.ConfigManager) {
+      const cfg = window.ConfigManager.get();
+      if (cfg.theme && cfg.theme.particlesEnabled === false) {
+        canvas.style.display = "none";
+        return;
+      }
+    }
 
+    const ctx = canvas.getContext("2d");
     let w, h, particles, rafId;
-    const PARTICLE_COUNT = window.innerWidth < 640 ? 25 : 50;
-    const MAX_SPEED = 0.4;
+    const DPR = Math.min(window.devicePixelRatio || 1, 2);
+    const COUNT = window.innerWidth < 640 ? 22 : 38;
+    const MAX_SPEED = 0.3;
 
     function resize() {
-      w = canvas.width = window.innerWidth * window.devicePixelRatio;
-      h = canvas.height = window.innerHeight * window.devicePixelRatio;
+      w = canvas.width = window.innerWidth * DPR;
+      h = canvas.height = window.innerHeight * DPR;
       canvas.style.width = window.innerWidth + "px";
       canvas.style.height = window.innerHeight + "px";
     }
 
     function readColor() {
-      // قراءة --particles-color من :root
-      const c = getComputedStyle(document.documentElement).getPropertyValue("--particles-color").trim();
-      return c || "rgba(255,186,0,0.5)";
+      const c = getComputedStyle(document.documentElement)
+        .getPropertyValue("--particle-color").trim();
+      return c || "rgba(255,191,0,0.55)";
     }
 
     function makeParticles() {
       const arr = [];
-      for (let i = 0; i < PARTICLE_COUNT; i++) {
+      for (let i = 0; i < COUNT; i++) {
         arr.push({
           x: Math.random() * w,
           y: Math.random() * h,
-          r: Math.random() * 2.2 + 0.6,
+          r: (Math.random() * 1.8 + 0.5) * DPR,
           vx: (Math.random() - 0.5) * MAX_SPEED,
           vy: (Math.random() - 0.5) * MAX_SPEED,
-          a: Math.random() * 0.6 + 0.2
+          a: Math.random() * 0.5 + 0.2
         });
       }
       return arr;
@@ -59,12 +70,11 @@
     function draw() {
       ctx.clearRect(0, 0, w, h);
       const color = readColor();
-      // استخراج rgba الأساسي
-      const rgbaMatch = color.match(/rgba?\(([^)]+)\)/);
-      let base = "255, 186, 0";
-      if (rgbaMatch) {
-        const parts = rgbaMatch[1].split(",").map(s => s.trim());
-        base = `${parts[0]}, ${parts[1]}, ${parts[2]}`;
+      const m = color.match(/rgba?\(([^)]+)\)/);
+      let base = "255, 191, 0";
+      if (m) {
+        const p = m[1].split(",").map(s => s.trim());
+        base = `${p[0]}, ${p[1]}, ${p[2]}`;
       }
 
       for (let i = 0; i < particles.length; i++) {
@@ -75,23 +85,23 @@
         if (p.y < 0 || p.y > h) p.vy *= -1;
 
         ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r * window.devicePixelRatio, 0, Math.PI * 2);
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(${base}, ${p.a})`;
         ctx.fill();
       }
 
-      // وصل الجسيمات القريبة بخطوط رفيعة
+      // وصل الجسيمات القريبة
+      const maxDist = 110 * DPR;
       for (let i = 0; i < particles.length; i++) {
         for (let j = i + 1; j < particles.length; j++) {
           const dx = particles[i].x - particles[j].x;
           const dy = particles[i].y - particles[j].y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          const maxDist = 120 * window.devicePixelRatio;
-          if (dist < maxDist) {
+          const d = Math.sqrt(dx * dx + dy * dy);
+          if (d < maxDist) {
             ctx.beginPath();
             ctx.moveTo(particles[i].x, particles[i].y);
             ctx.lineTo(particles[j].x, particles[j].y);
-            ctx.strokeStyle = `rgba(${base}, ${0.15 * (1 - dist / maxDist)})`;
+            ctx.strokeStyle = `rgba(${base}, ${0.12 * (1 - d / maxDist)})`;
             ctx.lineWidth = 1;
             ctx.stroke();
           }
@@ -111,15 +121,12 @@
     let resizeTimer;
     window.addEventListener("resize", () => {
       clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(() => { resize(); particles = makeParticles(); }, 200);
+      resizeTimer = setTimeout(() => {
+        resize();
+        particles = makeParticles();
+      }, 200);
     });
 
-    // إيقاف عند التبديل للـ off (عبر event)
-    window.addEventListener("themechange", () => {
-      // إعادة قراءة اللون فقط — ما نوقفش الأنيميشن
-    });
-
-    // إيقاف عند الإخفاء (توفير للأداء)
     document.addEventListener("visibilitychange", () => {
       if (document.hidden) {
         if (rafId) cancelAnimationFrame(rafId);
@@ -131,10 +138,9 @@
     start();
   }
 
-  // شغّل بعد تحميل DOM
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", initParticles);
+    document.addEventListener("DOMContentLoaded", init);
   } else {
-    initParticles();
+    init();
   }
 })();

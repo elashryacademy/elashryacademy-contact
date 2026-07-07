@@ -1,83 +1,100 @@
 /* ============================================================
-   El Ashry Academy - Theme Variables
+   El Ashry Academy — Theme Tokens
    ============================================================
-   كل ألوان الموقع وخطوطه بتيجي من هنا.
-   لوحة الإدارة بتعدّل على --primary و --accent و --bg بشكل ديناميكي.
+   كل المتغيرات اللونية والطبوغرافية والظلال في مكان واحد.
+   لوحة الإدارة بتعدّل على --primary و --accent و --bg ديناميكيًا.
    ============================================================ */
 
 :root {
-  /* ===== Brand colors (default) ===== */
-  --primary:        #00255F;
-  --primary-rgb:    0, 37, 95;
-  --accent:         #FFBA00;
-  --accent-rgb:     255, 186, 0;
+  /* ====== Brand ====== */
+  --primary:        #002662;
+  --primary-rgb:    0, 38, 98;
+  --primary-soft:   #0F3782;
+  --primary-deep:   #001A47;
+
+  --accent:         #FFBF00;
+  --accent-rgb:     255, 191, 0;
   --accent-soft:    #FFD54F;
+  --accent-deep:    #E09600;
 
-  /* ===== Gradients ===== */
-  --grad-primary:   linear-gradient(135deg, #00255F 0%, #001A47 100%);
-  --grad-accent:    linear-gradient(135deg, #FFD54F 0%, #FFBA00 50%, #F09000 100%);
-  --grad-mix:       linear-gradient(135deg, #00255F 0%, #4a148c 50%, #FFBA00 100%);
+  /* Excel green accent */
+  --green:          #217346;
+  --green-rgb:      33, 115, 70;
 
-  /* ===== Typography ===== */
-  --font-family:    'Cairo', 'Tajawal', 'Segoe UI', system-ui, sans-serif;
-  --font-display:   'Cairo', 'Tajawal', sans-serif;
-  --fs-xs:          0.75rem;
-  --fs-sm:          0.875rem;
-  --fs-base:        1rem;
-  --fs-lg:          1.125rem;
-  --fs-xl:          1.25rem;
-  --fs-2xl:         1.5rem;
-  --fs-3xl:         2rem;
-  --fs-4xl:         2.75rem;
-  --fs-5xl:         3.5rem;
+  /* ====== Typography ====== */
+  --font-family:    'Inter', 'Cairo', system-ui, -apple-system, sans-serif;
+  --font-display:   'Inter', 'Cairo', sans-serif;
+  --font-ar:        'Cairo', 'Inter', sans-serif;
 
-  /* ===== Spacing ===== */
-  --space-1:  0.25rem;
-  --space-2:  0.5rem;
-  --space-3:  1rem;
-  --space-4:  1.5rem;
-  --space-5:  2rem;
-  --space-6:  3rem;
-  --space-7:  4rem;
+  --fs-xs:   0.75rem;
+  --fs-sm:   0.875rem;
+  --fs-base: 1rem;
+  --fs-lg:   1.125rem;
+  --fs-xl:   1.375rem;
+  --fs-2xl:  1.75rem;
+  --fs-3xl:  2.25rem;
+  --fs-4xl:  3rem;
 
-  /* ===== Radii ===== */
-  --radius-sm: 8px;
-  --radius:    16px;
-  --radius-lg: 24px;
-  --radius-full: 999px;
+  --lh-tight: 1.15;
+  --lh-snug:  1.35;
+  --lh-base:  1.6;
 
-  /* ===== Shadow ===== */
-  --shadow-sm: 0 2px 8px rgba(0,0,0,0.15);
-  --shadow:    0 8px 24px rgba(0,0,0,0.25);
-  --shadow-lg: 0 16px 48px rgba(0,0,0,0.35);
-  --shadow-glow: 0 0 32px rgba(var(--accent-rgb), 0.35);
+  /* ====== Spacing ====== */
+  --s-1: 0.25rem;
+  --s-2: 0.5rem;
+  --s-3: 0.75rem;
+  --s-4: 1rem;
+  --s-5: 1.5rem;
+  --s-6: 2rem;
+  --s-7: 3rem;
+  --s-8: 4rem;
 
-  /* ===== Layout ===== */
-  --max-width: 720px;
-  --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-slow: 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  /* ====== Radii ====== */
+  --r-sm: 8px;
+  --r-md: 12px;
+  --r-lg: 18px;
+  --r-xl: 24px;
+  --r-full: 999px;
 
-  /* ===== Button Style ===== */
-  --btn-style: glass; /* glass | solid | gradient */
+  /* ====== Layout ====== */
+  --max-width: 560px;
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --t-fast: 0.18s var(--ease);
+  --t-base: 0.32s var(--ease);
+  --t-slow: 0.6s var(--ease);
+
+  --btn-style: glass;
 }
 
 /* ============================================================
    Dark Theme (default)
    ============================================================ */
 [data-theme="dark"] {
-  --bg:                 #0a0f1f;
-  --bg-2:               #0f1629;
-  --surface:            rgba(255, 255, 255, 0.05);
-  --surface-2:          rgba(255, 255, 255, 0.08);
-  --surface-hover:      rgba(255, 255, 255, 0.12);
-  --border:             rgba(255, 255, 255, 0.1);
-  --border-strong:      rgba(255, 186, 0, 0.35);
-  --text:               #ffffff;
-  --text-soft:          rgba(255, 255, 255, 0.75);
-  --text-muted:         rgba(255, 255, 255, 0.5);
-  --bg-grid-color:      rgba(255, 186, 0, 0.04);
-  --particles-color:    rgba(255, 186, 0, 0.5);
-  --loader-bg:          #0a0f1f;
+  --bg:               #070B16;
+  --bg-2:             #0B1224;
+  --surface:          rgba(255, 255, 255, 0.04);
+  --surface-2:        rgba(255, 255, 255, 0.06);
+  --surface-hover:    rgba(255, 255, 255, 0.10);
+  --surface-active:   rgba(255, 255, 255, 0.14);
+
+  --border:           rgba(255, 255, 255, 0.08);
+  --border-strong:    rgba(255, 191, 0, 0.30);
+  --border-subtle:    rgba(255, 255, 255, 0.05);
+
+  --text:             #F5F7FA;
+  --text-soft:        rgba(245, 247, 250, 0.72);
+  --text-muted:       rgba(245, 247, 250, 0.45);
+
+  --grain-opacity:    0.04;
+  --particle-color:   rgba(255, 191, 0, 0.55);
+  --glow-1:           rgba(0, 38, 98, 0.6);
+  --glow-2:           rgba(255, 191, 0, 0.18);
+
+  --shadow-card:      0 1px 0 rgba(255,255,255,0.05) inset, 0 12px 32px rgba(0,0,0,0.45);
+  --shadow-hover:     0 1px 0 rgba(255,255,255,0.08) inset, 0 20px 50px rgba(0,0,0,0.55), 0 0 0 1px var(--border-strong);
+  --shadow-fab:       0 8px 24px rgba(0,0,0,0.45), 0 0 0 1px var(--border);
+
   color-scheme: dark;
 }
 
@@ -85,19 +102,30 @@
    Light Theme
    ============================================================ */
 [data-theme="light"] {
-  --bg:                 #f5f7fb;
-  --bg-2:               #e8edf5;
-  --surface:            rgba(0, 37, 95, 0.04);
-  --surface-2:          rgba(0, 37, 95, 0.07);
-  --surface-hover:      rgba(0, 37, 95, 0.1);
-  --border:             rgba(0, 37, 95, 0.12);
-  --border-strong:      rgba(0, 37, 95, 0.25);
-  --text:               #0a0f1f;
-  --text-soft:          rgba(10, 15, 31, 0.78);
-  --text-muted:         rgba(10, 15, 31, 0.5);
-  --bg-grid-color:      rgba(0, 37, 95, 0.05);
-  --particles-color:    rgba(0, 37, 95, 0.35);
-  --loader-bg:          #f5f7fb;
+  --bg:               #F7F8FB;
+  --bg-2:             #EEF1F6;
+  --surface:          rgba(0, 38, 98, 0.03);
+  --surface-2:        rgba(0, 38, 98, 0.05);
+  --surface-hover:    rgba(0, 38, 98, 0.08);
+  --surface-active:   rgba(0, 38, 98, 0.12);
+
+  --border:           rgba(0, 38, 98, 0.10);
+  --border-strong:    rgba(0, 38, 98, 0.25);
+  --border-subtle:    rgba(0, 38, 98, 0.06);
+
+  --text:             #0A1124;
+  --text-soft:        rgba(10, 17, 36, 0.75);
+  --text-muted:       rgba(10, 17, 36, 0.50);
+
+  --grain-opacity:    0.03;
+  --particle-color:   rgba(0, 38, 98, 0.30);
+  --glow-1:           rgba(0, 38, 98, 0.20);
+  --glow-2:           rgba(255, 191, 0, 0.30);
+
+  --shadow-card:      0 1px 0 rgba(255,255,255,0.6) inset, 0 8px 24px rgba(0,38,98,0.10);
+  --shadow-hover:     0 1px 0 rgba(255,255,255,0.7) inset, 0 16px 40px rgba(0,38,98,0.15), 0 0 0 1px var(--border-strong);
+  --shadow-fab:       0 8px 24px rgba(0,38,98,0.15), 0 0 0 1px var(--border);
+
   color-scheme: light;
 }
 
@@ -113,14 +141,12 @@
   }
 }
 
-/* Animation-level: reduced (set via JS) */
-[data-anim="reduced"] *,
-[data-anim="reduced"] *::before,
+[data-anim="reduced"] *,  [data-anim="reduced"] *::before,
 [data-anim="reduced"] *::after {
   animation-duration: 0.01ms !important;
   transition-duration: 0.01ms !important;
 }
-/* Animation-level: off */
+
 [data-anim="off"] *,
 [data-anim="off"] *::before,
 [data-anim="off"] *::after {

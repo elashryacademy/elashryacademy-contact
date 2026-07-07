@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>تسجيل الدخول | El Ashry Academy</title>
+  <meta name="theme-color" content="#002662" />
+
+  <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Inter:wght@500;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/themes.css" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+
+  <style>
+    .login {
+      min-height: 100vh;
+      min-height: 100dvh;
+      display: grid;
+      place-items: center;
+      padding: var(--s-4);
+      position: relative;
+      z-index: 1;
+    }
+    .login__card {
+      width: 100%;
+      max-width: 380px;
+      padding: var(--s-6) var(--s-5);
+      border-radius: var(--r-xl);
+      background: var(--surface-2);
+      backdrop-filter: blur(24px) saturate(160%);
+      -webkit-backdrop-filter: blur(24px) saturate(160%);
+      border: 1px solid var(--border);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+      animation: cardIn 0.6s var(--ease) both;
+    }
+    .login__logo {
+      display: block;
+      margin: 0 auto var(--s-3);
+      width: 72px;
+      height: 72px;
+      border-radius: 16px;
+      filter: drop-shadow(0 8px 24px rgba(var(--primary-rgb), 0.5));
+    }
+    .login__title {
+      text-align: center;
+      font-size: var(--fs-xl);
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 4px;
+      letter-spacing: -0.01em;
+    }
+    .login__subtitle {
+      text-align: center;
+      font-size: var(--fs-sm);
+      color: var(--text-muted);
+      margin-bottom: var(--s-5);
+    }
+    .form-group {
+      margin-bottom: var(--s-3);
+    }
+    .form-group label {
+      display: block;
+      font-size: var(--fs-sm);
+      font-weight: 600;
+      color: var(--text-soft);
+      margin-bottom: 0.4rem;
+    }
+    .input-wrap {
+      position: relative;
+    }
+    .input-wrap input {
+      width: 100%;
+      padding: 0.75rem 1rem 0.75rem 2.75rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      color: var(--text);
+      font-family: inherit;
+      font-size: var(--fs-sm);
+      transition: border-color var(--t-base), background var(--t-base);
+    }
+    .input-wrap input:focus {
+      outline: none;
+      border-color: var(--accent);
+      background: var(--surface-hover);
+    }
+    .input-wrap input::placeholder { color: var(--text-muted); }
+    .input-wrap svg {
+      position: absolute;
+      top: 50%;
+      inset-inline-start: 0.85rem;
+      transform: translateY(-50%);
+      width: 18px;
+      height: 18px;
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+    .login__options {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--s-4);
+      font-size: var(--fs-xs);
+    }
+    .login__check {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      color: var(--text-soft);
+      cursor: pointer;
+      user-select: none;
+    }
+    .login__check input {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+    .login__btn {
+      width: 100%;
+      padding: 0.85rem 1rem;
+      background: linear-gradient(135deg, var(--accent), var(--accent-deep, #E09600));
+      color: var(--primary);
+      font-weight: 700;
+      font-size: var(--fs-base);
+      border-radius: var(--r-md);
+      cursor: pointer;
+      transition: transform var(--t-base), box-shadow var(--t-base);
+      position: relative;
+      overflow: hidden;
+    }
+    .login__btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 12px 32px rgba(var(--accent-rgb), 0.4);
+    }
+    .login__btn:active { transform: translateY(0); }
+    .login__btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+    .login__error {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #fca5a5;
+      padding: 0.65rem 0.9rem;
+      border-radius: var(--r-sm);
+      font-size: var(--fs-sm);
+      margin-bottom: var(--s-3);
+      display: none;
+    }
+    .login__error.is-visible { display: block; animation: shake 0.4s ease; }
+    .login__back {
+      display: block;
+      text-align: center;
+      margin-top: var(--s-4);
+      font-size: var(--fs-xs);
+      color: var(--text-muted);
+      transition: color var(--t-base);
+    }
+    .login__back:hover { color: var(--accent); }
+  </style>
+</head>
+<body>
+
+  <div class="bg" aria-hidden="true">
+    <div class="bg__gradient"></div>
+    <div class="bg__grain"></div>
+    <div class="bg__glow bg__glow--1"></div>
+    <div class="bg__glow bg__glow--2"></div>
+  </div>
+
+  <div class="login">
+    <form class="login__card" id="loginForm" autocomplete="on">
+      <img src="assets/images/Logo.png" alt="El Ashry Academy" class="login__logo" width="72" height="72" />
+      <h1 class="login__title">لوحة التحكم</h1>
+      <p class="login__subtitle">سجّل دخولك للمتابعة</p>
+
+      <div class="login__error" id="loginError"></div>
+
+      <div class="form-group">
+        <label for="username">اسم المستخدم</label>
+        <div class="input-wrap">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5zm0 2c-4 0-9 2-9 5v3h18v-3c0-3-5-5-9-5z"/></svg>
+          <input type="text" id="username" name="username" placeholder="admin" autocomplete="username" required />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="password">كلمة المرور</label>
+        <div class="input-wrap">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 1a5 5 0 0 0-5 5v3H6a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-9a2 2 0 0 0-2-2h-1V6a5 5 0 0 0-5-5zm3 8H9V6a3 3 0 0 1 6 0z"/></svg>
+          <input type="password" id="password" name="password" placeholder="••••••••" autocomplete="current-password" required />
+        </div>
+      </div>
+
+      <div class="login__options">
+        <label class="login__check">
+          <input type="checkbox" id="remember" />
+          <span>تذكّرني</span>
+        </label>
+      </div>
+
+      <button type="submit" class="login__btn" id="loginBtn">دخول</button>
+
+      <a href="./" class="login__back">← العودة للموقع</a>
+    </form>
+  </div>
+
+  <script src="assets/js/config.js"></script>
+  <script src="assets/js/auth.js"></script>
+  <script>
+    (async function () {
+      // لو المسخدم مسجل بالفعل → redirect لـ admin
+      await window.Auth.ensureDefaultCredentials();
+      if (window.Auth.isAuthenticated()) {
+        window.location.href = "admin/";
+        return;
+      }
+
+      const form = document.getElementById("loginForm");
+      const errorBox = document.getElementById("loginError");
+      const btn = document.getElementById("loginBtn");
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const username = document.getElementById("username").value.trim();
+        const password = document.getElementById("password").value;
+        const remember = document.getElementById("remember").checked;
+
+        btn.disabled = true;
+        btn.textContent = "...جاري";
+        errorBox.classList.remove("is-visible");
+
+        const result = await window.Auth.login(username, password, remember);
+        if (result.ok) {
+          // محاولة استرجاع الصفحة الأصلية
+          const redirect = sessionStorage.getItem("elashry_auth_redirect");
+          if (redirect) {
+            sessionStorage.removeItem("elashry_auth_redirect");
+            window.location.href = redirect;
+          } else {
+            window.location.href = "admin/";
+          }
+        } else {
+          errorBox.textContent = result.error;
+          errorBox.classList.add("is-visible");
+          btn.disabled = false;
+          btn.textContent = "دخول";
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

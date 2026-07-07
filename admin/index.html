@@ -3,50 +3,62 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>لوحة الإدارة | El Ashry Academy</title>
   <meta name="robots" content="noindex, nofollow" />
+  <title>لوحة التحكم | El Ashry Academy</title>
+  <meta name="theme-color" content="#002662" />
+
   <link rel="icon" type="image/svg+xml" href="../assets/images/favicon.svg" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Inter:wght@500;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../assets/css/themes.css" />
   <link rel="stylesheet" href="../assets/css/style.css" />
   <link rel="stylesheet" href="admin.css" />
 </head>
 <body>
-  <div class="bg-gradient" aria-hidden="true"></div>
+
+  <div class="bg" aria-hidden="true">
+    <div class="bg__gradient"></div>
+    <div class="bg__grain"></div>
+  </div>
 
   <div class="admin">
+    <!-- =============== HEADER =============== -->
     <header class="admin__header glass">
       <div class="admin__brand">
         <img src="../assets/images/Logo.png" alt="logo" width="40" height="40" />
         <div>
-          <h1>لوحة الإدارة</h1>
-          <p>El Ashry Academy — Admin Panel</p>
+          <h1>لوحة التحكم</h1>
+          <p>El Ashry Academy — Admin</p>
         </div>
       </div>
       <div class="admin__actions">
-        <a href="../" class="btn btn--ghost">عرض الموقع</a>
-        <button id="exportBtn" class="btn btn--primary">Export</button>
-        <label class="btn btn--ghost">
+        <a href="../" target="_blank" class="admin__btn admin__btn--ghost">عرض الموقع ↗</a>
+        <button id="exportBtn" class="admin__btn admin__btn--primary">Export</button>
+        <label class="admin__btn admin__btn--ghost">
           Import
           <input type="file" id="importInput" accept="application/json" hidden />
         </label>
-        <button id="resetBtn" class="btn btn--ghost">إعادة تعيين</button>
+        <button id="changeAuthBtn" class="admin__btn admin__btn--ghost">بيانات الدخول</button>
+        <button id="logoutBtn" class="admin__btn admin__btn--ghost">خروج</button>
       </div>
     </header>
 
+    <!-- =============== NAV =============== -->
     <nav class="admin__nav glass">
-      <button data-tab="basic" class="is-active">المعلومات الأساسية</button>
-      <button data-tab="links">روابط التواصل</button>
-      <button data-tab="images">الصور</button>
+      <button data-tab="identity" class="is-active">الهوية</button>
+      <button data-tab="platforms">المنصات</button>
       <button data-tab="appearance">المظهر</button>
-      <button data-tab="platforms">ترتيب وإظهار المنصات</button>
+      <button data-tab="media">الصور</button>
+      <button data-tab="seo">SEO</button>
     </nav>
 
+    <!-- =============== CONTENT =============== -->
     <main class="admin__content glass">
 
-      <!-- ============ TAB: BASIC ============ -->
-      <section data-panel="basic" class="is-active">
-        <h2>المعلومات الأساسية</h2>
+      <!-- TAB: IDENTITY -->
+      <section data-panel="identity" class="is-active">
+        <h2>الهوية الأساسية</h2>
         <div class="form-grid">
           <label>اسم الأكاديمية (إنجليزي)
             <input type="text" data-key="academyName" />
@@ -54,59 +66,67 @@
           <label>اسم الأكاديمية (عربي)
             <input type="text" data-key="academyNameAr" />
           </label>
-          <label>اسم صاحب الأكاديمية (عربي)
-            <input type="text" data-key="ownerName" />
+          <label class="full">الجملة أسفل الاسم (Tagline)
+            <input type="text" data-key="tagline" />
           </label>
-          <label>اسم صاحب الأكاديمية (إنجليزي)
-            <input type="text" data-key="ownerNameEn" />
+          <label class="full">وصف مختصر
+            <input type="text" data-key="description" />
           </label>
-          <label class="full">الشعار النصي
-            <input type="text" data-key="slogan" />
+          <label class="full">نص الـ Footer
+            <input type="text" data-key="footerText" />
           </label>
-          <label class="full">النبذة
-            <textarea data-key="bio" rows="4"></textarea>
-          </label>
-        </div>
-      </section>
-
-      <!-- ============ TAB: LINKS ============ -->
-      <section data-panel="links">
-        <h2>روابط التواصل</h2>
-        <p class="hint">سيظهر Popup لكل منصة لو الرابط فاضي أو Placeholder.</p>
-        <div class="form-grid" id="linksGrid">
-          <!-- filled by JS -->
-        </div>
-      </section>
-
-      <!-- ============ TAB: IMAGES ============ -->
-      <section data-panel="images">
-        <h2>الصور</h2>
-        <div class="form-grid">
-          <label class="full">اللوجو
-            <div class="upload-row">
-              <input type="text" data-key="logo" placeholder="assets/images/Logo.png أو رابط" />
-              <input type="file" accept="image/*" data-file="logo" />
-            </div>
-            <img id="preview-logo" class="preview" alt="logo preview" />
-          </label>
-          <label class="full">الصورة الشخصية
-            <div class="upload-row">
-              <input type="text" data-key="profileImage" placeholder="URL أو رفع ملف" />
-              <input type="file" accept="image/*" data-file="profileImage" />
-            </div>
-            <img id="preview-profileImage" class="preview" alt="preview" />
-          </label>
-          <label class="full">صورة الغلاف
-            <div class="upload-row">
-              <input type="text" data-key="coverImage" placeholder="URL أو رفع ملف" />
-              <input type="file" accept="image/*" data-file="coverImage" />
-            </div>
-            <img id="preview-coverImage" class="preview" alt="preview" />
+          <label class="full">حقوق الـ Footer
+            <input type="text" data-key="footerCredit" />
           </label>
         </div>
       </section>
 
-      <!-- ============ TAB: APPEARANCE ============ -->
+      <!-- TAB: PLATFORMS -->
+      <section data-panel="platforms">
+        <h2>المنصات</h2>
+        <p class="hint">اسحب لإعادة الترتيب. فعّل أو أوقف أي منصة. لتعديل بياناتها اضغط عليها.</p>
+
+        <div class="platforms-toolbar">
+          <button id="addPlatformBtn" class="admin__btn admin__btn--primary">+ إضافة منصة</button>
+        </div>
+
+        <ul id="platformsList" class="platforms-list"></ul>
+
+        <!-- Edit modal -->
+        <div class="modal" id="platformModal" aria-hidden="true">
+          <div class="modal__backdrop" data-close></div>
+          <div class="modal__panel glass">
+            <button class="modal__close" data-close>&times;</button>
+            <h3 class="modal__title">تعديل المنصة</h3>
+            <div class="form-grid" id="platformEditForm">
+              <label class="full">المعرف (id)
+                <input type="text" data-pkey="id" />
+              </label>
+              <label class="full">الاسم
+                <input type="text" data-pkey="name" />
+              </label>
+              <label class="full">الوصف
+                <input type="text" data-pkey="desc" />
+              </label>
+              <label class="full">الرابط
+                <input type="text" data-pkey="url" />
+              </label>
+              <label>اللون
+                <input type="color" data-pkey="color" />
+              </label>
+              <label>الأيقونة
+                <select data-pkey="icon"></select>
+              </label>
+            </div>
+            <div class="modal__actions">
+              <button id="deletePlatformBtn" class="admin__btn admin__btn--ghost">حذف المنصة</button>
+              <button id="savePlatformBtn" class="admin__btn admin__btn--primary">حفظ</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB: APPEARANCE -->
       <section data-panel="appearance">
         <h2>المظهر</h2>
         <div class="form-grid">
@@ -114,7 +134,6 @@
             <select data-key="theme.mode">
               <option value="dark">داكن</option>
               <option value="light">فاتح</option>
-              <option value="auto">تلقائي</option>
             </select>
           </label>
           <label>نمط الأزرار
@@ -131,6 +150,12 @@
               <option value="off">إيقاف</option>
             </select>
           </label>
+          <label>تفعيل الجسيمات
+            <select data-key="theme.particlesEnabled">
+              <option value="true">مفعل</option>
+              <option value="false">معطّل</option>
+            </select>
+          </label>
           <label>اللون الأساسي
             <input type="color" data-key="theme.primaryColor" />
           </label>
@@ -140,39 +165,135 @@
           <label>لون الخلفية
             <input type="color" data-key="theme.backgroundColor" />
           </label>
+          <label>لون السطح
+            <input type="color" data-key="theme.surfaceColor" />
+          </label>
           <label class="full">الخط
             <select data-key="theme.fontFamily">
-              <option value="'Cairo', 'Tajawal', sans-serif">Cairo / Tajawal</option>
+              <option value="'Inter', 'Cairo', system-ui, sans-serif">Inter + Cairo</option>
+              <option value="'Cairo', sans-serif">Cairo</option>
               <option value="'Tajawal', sans-serif">Tajawal</option>
-              <option value="'Segoe UI', sans-serif">Segoe UI</option>
-              <option value="'Arial', sans-serif">Arial</option>
               <option value="system-ui">System UI</option>
             </select>
           </label>
         </div>
       </section>
 
-      <!-- ============ TAB: PLATFORMS ============ -->
-      <section data-panel="platforms">
-        <h2>ترتيب وإظهار المنصات</h2>
-        <p class="hint">اسحب وأفلت لإعادة الترتيب. فعّل/أوقف أي منصة.</p>
-        <ul id="platformsList" class="platforms-list">
-          <!-- filled by JS -->
-        </ul>
+      <!-- TAB: MEDIA -->
+      <section data-panel="media">
+        <h2>الصور</h2>
+        <div class="form-grid">
+          <label class="full">اللوجو
+            <div class="upload-row">
+              <input type="text" data-key="logo" placeholder="assets/images/Logo.png" />
+              <label class="admin__btn admin__btn--ghost file-btn">
+                رفع
+                <input type="file" accept="image/*" data-file="logo" hidden />
+              </label>
+            </div>
+            <img id="preview-logo" class="preview" alt="" />
+          </label>
+          <label class="full">صورة QR (اختياري - لو فضي Toledo اللوجو الافتراضي)
+            <div class="upload-row">
+              <input type="text" data-key="qrImage" placeholder="URL أو رفع" />
+              <label class="admin__btn admin__btn--ghost file-btn">
+                رفع
+                <input type="file" accept="image/*" data-file="qrImage" hidden />
+              </label>
+            </div>
+            <img id="preview-qrImage" class="preview" alt="" />
+          </label>
+          <label class="full">Favicon (SVG)
+            <div class="upload-row">
+              <input type="text" data-key="favicon" placeholder="assets/images/favicon.svg" />
+              <label class="admin__btn admin__btn--ghost file-btn">
+                رفع
+                <input type="file" accept="image/svg+xml,image/png" data-file="favicon" hidden />
+              </label>
+            </div>
+          </label>
+          <label class="full">صورة شخصية
+            <div class="upload-row">
+              <input type="text" data-key="profileImage" />
+              <label class="admin__btn admin__btn--ghost file-btn">
+                رفع
+                <input type="file" accept="image/*" data-file="profileImage" hidden />
+              </label>
+            </div>
+            <img id="preview-profileImage" class="preview" alt="" />
+          </label>
+          <label class="full">صورة الغلاف
+            <div class="upload-row">
+              <input type="text" data-key="coverImage" />
+              <label class="admin__btn admin__btn--ghost file-btn">
+                رفع
+                <input type="file" accept="image/*" data-file="coverImage" hidden />
+              </label>
+            </div>
+            <img id="preview-coverImage" class="preview" alt="" />
+          </label>
+        </div>
+      </section>
+
+      <!-- TAB: SEO -->
+      <section data-panel="seo">
+        <h2>SEO</h2>
+        <div class="form-grid">
+          <label class="full">رابط الموقع (Canonical)
+            <input type="text" data-key="siteUrl" />
+          </label>
+          <label class="full">عنوان SEO
+            <input type="text" data-key="seoTitle" />
+          </label>
+          <label class="full">وصف SEO
+            <textarea data-key="seoDescription" rows="3"></textarea>
+          </label>
+          <label class="full">كلمات مفتاحية
+            <input type="text" data-key="seoKeywords" />
+          </label>
+        </div>
       </section>
 
     </main>
 
-    <div class="admin__save-bar glass">
+    <!-- =============== STATUS BAR =============== -->
+    <div class="admin__status glass">
       <span id="saveStatus">كل التعديلات بتتخزن تلقائيًا</span>
-      <button id="saveBtn" class="btn btn--primary">حفظ ونشر</button>
     </div>
   </div>
 
+  <!-- =============== CHANGE AUTH MODAL =============== -->
+  <div class="modal" id="authModal" aria-hidden="true">
+    <div class="modal__backdrop" data-close></div>
+    <div class="modal__panel glass">
+      <button class="modal__close" data-close>&times;</button>
+      <h3 class="modal__title">تغيير بيانات الدخول</h3>
+      <div class="form-grid">
+        <label class="full">اسم المستخدم الجديد
+          <input type="text" id="newUsername" />
+        </label>
+        <label class="full">كلمة المرور الجديدة
+          <input type="password" id="newPassword" />
+        </label>
+        <label class="full">تأكيد كلمة المرور
+          <input type="password" id="confirmPassword" />
+        </label>
+      </div>
+      <div class="modal__actions">
+        <button id="saveAuthBtn" class="admin__btn admin__btn--primary">حفظ البيانات</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =============== TOAST =============== -->
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
+  <!-- =============== SCRIPTS =============== -->
   <script src="../assets/js/config.js"></script>
+  <script src="../assets/js/config-manager.js"></script>
+  <script src="../assets/js/auth.js"></script>
   <script src="../assets/js/theme.js"></script>
+  <script src="../assets/js/cards.js"></script>
   <script src="admin.js"></script>
 </body>
 </html>

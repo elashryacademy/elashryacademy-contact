@@ -1,65 +1,64 @@
-# El Ashry Academy | أكاديمية العشري
+# El Ashry Academy
 
-صفحة تواصل احترافية لبراند **El Ashry Academy** بقيادة باشمهندس عبده العشري.
+الصفحة الرسمية للتواصل — Official Contact Page / Smart Link / Digital Business Card.
 
-> **اتعلّم صح... وطبّق بإيدك... واحتَرِف**
-
----
-
-## ✨ المميزات
-
-- ✅ **HTML + CSS + JavaScript** فقط — بدون أي Framework
-- ✅ **Mobile First** و Responsive بالكامل
-- ✅ **Glassmorphism** و **Gradient Background** و **Particles**
-- ✅ **Dark / Light Theme** مع حفظ اختيار المستخدم
-- ✅ **Ripple Effect** + **Glow Effect** + **Hover Animations**
-- ✅ **QR Code** داخلي (بدون مكتبات)
-- ✅ **Download VCF** (بطاقة تواصل)
-- ✅ **Share Page** + **Copy WhatsApp Number**
-- ✅ **Back to Top** + **Loading Screen**
-- ✅ **SEO كامل**: Meta + Open Graph + Twitter Card + Schema.org
-- ✅ **PWA Ready**: manifest.json + apple-touch-icon + android-chrome
-- ✅ **404.html** + **robots.txt** + **sitemap.xml**
-- ✅ **لوحة إدارة** في `/admin` بدون Backend
-  - تعديل كل البيانات والألوان والخطوط
-  - إظهار/إخفاء المنصات + ترتيب بالسحب والإفلات
-  - رفع لوجو/صور (Base64)
-  - Export / Import (`config.json`)
-  - كل التعديلات تُحفظ في LocalStorage
+> **نتعلّم صح... ونشتغل صح.**
 
 ---
 
-## 📁 هيكل المشروع
+## ✦ المميزات
+
+- **HTML + CSS + JavaScript** فقط — بدون أي Framework
+- **Mobile First** و Responsive بالكامل (Desktop / Tablet / Mobile)
+- **Glassmorphism** + **Particles** + **Dark Gradient** أنيق
+- **Loading Screen** احترافي
+- **Ripple Effect** + **Hover Animations** + **Glow**
+- **QR Code** داخلي بدون مكتبات خارجية
+- **Share Page** + **Back to Top**
+- **SEO كامل**: Meta + Open Graph + Twitter Card + Schema.org + Canonical
+- **PWA Ready**: manifest + apple-touch-icon + android-chrome icons
+- **404.html** + **robots.txt** + **sitemap.xml**
+- **لوحة تحكم محمية** في `/admin` (تتطلب تسجيل دخول)
+
+---
+
+## ✦ هيكل المشروع
 
 ```
 el-ashry-academy/
-├── index.html                  الصفحة الرئيسية
-├── 404.html                    صفحة الخطأ
-├── manifest.json               PWA manifest
+├── index.html                 الصفحة الرئيسية
+├── login.html                 صفحة تسجيل الدخول
+├── 404.html                   صفحة 404
+├── manifest.json              PWA manifest
 ├── robots.txt
 ├── sitemap.xml
-├── README.md
-├── admin/                      لوحة الإدارة
+├── .nojekyll
+├── admin/                     لوحة التحكم (محمية)
 │   ├── index.html
 │   ├── admin.css
 │   └── admin.js
 └── assets/
     ├── css/
-    │   ├── style.css           التصميم الرئيسي
-    │   ├── themes.css          متغيرات الألوان والثيم
-    │   └── animations.css      كل الأنيميشن
+    │   ├── themes.css         متغيرات الألوان والثيم
+    │   ├── style.css          التصميم الرئيسي
+    │   └── animations.css     كل الأنيميشن
     ├── js/
-    │   ├── config.js           ⚙️ كل البيانات والروابط هنا
-    │   ├── main.js             المنطق الرئيسي
-    │   ├── cards.js            رندر بطاقات التواصل + الأيقونات
-    │   ├── theme.js            إدارة الثيم
-    │   ├── particles.js        خلفية الجسيمات
-    │   └── qr.js               مولّد QR (بدون مكتبات)
+    │   ├── config.js          ⚙️ الإعدادات الافتراضية
+    │   ├── config-manager.js  إدارة overlay + localStorage
+    │   ├── auth.js            نظام تسجيل الدخول
+    │   ├── theme.js           إدارة الثيم
+    │   ├── particles.js       خلفية الجسيمات
+    │   ├── qr.js              مولّد QR (بدون مكتبات)
+    │   ├── cards.js           رندر البطاقات + الأيقونات
+    │   └── main.js            المنطق الرئيسي
     └── images/
-        ├── Logo.png
-        ├── Logo.svg
-        ├── Logo-white.png
-        ├── Logo-black.png
+        ├── Logo.png           اللوجو الأساسي (شفاف)
+        ├── Logo.svg           نسخة فيكتور
+        ├── Logo-white.png     نسخة بيضاء
+        ├── Logo-black.png     نسخة سوداء
+        ├── Logo-full.png      اللوجو بخلفية
+        ├── EA-Icon.png        أيقونة EA
+        ├── EA-Icon.svg
         ├── favicon.ico
         ├── favicon.svg
         ├── apple-touch-icon.png
@@ -70,36 +69,70 @@ el-ashry-academy/
 
 ---
 
-## 🚀 النشر على GitHub Pages
+## ✦ بيانات تسجيل الدخول الافتراضية
 
-1. ارفع المجلد كاملًا لمستودع GitHub
-2. اذهب لـ **Settings → Pages**
-3. اختر الفرع (مثلاً `main`) ومجلد `/root`
-4. احفظ — الموقع هيكون متاح خلال دقائق
+```
+Username: admin
+Password: elashry2026
+```
 
----
-
-## ⚙️ التعديل
-
-### الطريقة الأولى: تعديل مباشر
-افتح `assets/js/config.js` وعدّل الروابط والبيانات.
-
-### الطريقة الثانية: لوحة الإدارة
-1. افتح `https://<your-site>/admin/`
-2. عدّل أي حاجة (البيانات، الألوان، الخطوط، ترتيب المنصات...)
-3. كل التعديلات بتتخزن في LocalStorage
-4. استخدم **Export** لتنزيل `config.json`
-5. استخدم **Import** لرفعه تاني
+> ⚠️ **مهم:** غيّر بيانات الدخول فورًا بعد أول تسجيل من:
+> لوحة التحكم → زر "بيانات الدخول"
 
 ---
 
-## 📝 ملاحظات
+## ✦ النشر على GitHub Pages
 
-- كل الروابط في `config.js` حاليًا Placeholders (مثل `YOUR_YOUTUBE_LINK`)
-- لو الرابط فاضي: الموقع هيعرض Popup "المنصة دي مش متاحة دلوقتي ❤️"
-- اللوجو اتولّد منه كل الصيغ (PNG/SVG/ICO/Favicon/Apple-touch/Android-chrome)
-- الألوان الأساسية: أزرق كحلي `#00255F` + ذهبي `#FFBA00`
+1. ارفع كل الملفات إلى مستودع GitHub
+2. **Settings → Pages**
+3. اختر الفرع `main` والمجلد `/root`
+4. احفظ — الموقع سيعمل خلال دقائق
 
 ---
 
-صُنع بكل ❤️ لـ **El Ashry Academy**
+## ✦ تخصيص المحتوى
+
+### الطريقة الأولى: من لوحة التحكم
+1. افتح `https://<your-site>/login.html`
+2. سجّل الدخول بالبيانات الافتراضية
+3. عدّل كل شيء من الواجهة:
+   - الهوية (الاسم، الجملة، الـ Footer)
+   - المنصات (إضافة/حذف/ترتيب بالسحب/إظهار-إخفاء)
+   - المظهر (الألوان، الخطوط، الأنيميشن)
+   - الصور (اللوجو، QR، Favicon)
+   - SEO (العنوان، الوصف، الكلمات المفتاحية)
+4. كل التعديلات تُحفظ تلقائيًا في LocalStorage
+5. استخدم **Export** لتنزيل `config.json` كـ Backup
+
+### الطريقة الثانية: تعديل مباشر
+افتح `assets/js/config.js` وعدّل `DEFAULT_CONFIG`.
+
+---
+
+## ✦ لوحة التحكم — كل ما يمكنك تعديله
+
+- ✅ اسم الأكاديمية (إنجليزي/عربي)
+- ✅ الجملة أسفل الاسم (Tagline)
+- ✅ نص الـ Footer
+- ✅ اللوجو (رفع ملف أو URL)
+- ✅ الألوان (Primary / Accent / Background / Surface)
+- ✅ الخطوط
+- ✅ نمط الأزرار (Glass / Solid / Gradient)
+- ✅ مستوى الأنيميشن (Full / Reduced / Off)
+- ✅ تفعيل/تعطيل الجسيمات
+- ✅ كل روابط التواصل
+- ✅ إضافة منصات جديدة
+- ✅ حذف المنصات
+- ✅ ترتيب المنصات بالسحب والإفلات
+- ✅ إظهار/إخفاء أي منصة
+- ✅ تغيير الأيقونة واللون لكل منصة
+- ✅ رفع صورة شخصية وغلاف
+- ✅ رفع QR مخصص
+- ✅ رفع Favicon
+- ✅ بيانات SEO (Title / Description / Keywords / Canonical)
+- ✅ تغيير بيانات تسجيل الدخول
+- ✅ Export / Import (config.json)
+
+---
+
+صُنع بكل ❤️ في مصر

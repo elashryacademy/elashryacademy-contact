@@ -1,26 +1,34 @@
-/* ============================================================
-   El Ashry Academy - Admin Panel Logic
-   ============================================================
-   - يقرأ CONFIG من config.js + overlay من LocalStorage
-   - أي تعديل يُحفظ في LocalStorage ويتطبيق على الموقع فورًا
-   - Export: ينزّل config.json كامل
-   - Import: يرفع config.json ويدمجه
-   - Drag & Drop لترتيب المنصات
-   - رفع الصور (تتحول لـ Base64)
-   ============================================================ */
+/**
+ * ============================================================
+ *  El Ashry Academy — Admin Panel Logic
+ * ============================================================
+ *  - حماية الصفحة (تتطلب تسجيل دخول)
+ *  - تعديل كل بيانات CONFIG (Hero/Footer/SEO/Theme/Media)
+ *  - إدارة المنصات: إضافة/حذف/ترتيب بالسحب/إظهار-إخفاء
+ *  - رفع الصور (Base64)
+ *  - تغيير بيانات تسجيل الدخول
+ *  - Export/Import config.json
+ * ============================================================ */
 (function () {
   "use strict";
 
-  const LS_KEY = "elashry_config_overlay";
-  const PLATFORM_IDS = [
-    "youtube","whatsapp","facebook","instagram","tiktok","linkedin",
-    "telegram","twitter","threads","discord","github","website",
-    "email","location","courses"
-  ];
+  /* ====== Auth guard ====== */
+  if (!window.Auth) {
+    alert("نظام المصادقة غير محمّل");
+    return;
+  }
+  if (!window.Auth.isAuthenticated()) {
+    sessionStorage.setItem("elashry_auth_redirect", window.location.href);
+    window.location.href = "../login.html";
+    return;
+  }
 
-  /* ---------- Helpers ---------- */
+  /* ====== Helpers ====== */
+  const $ = (sel, ctx = document) => ctx.querySelector(sel);
+  const $$ = (sel, ctx = document) => Array.from(ctx.querySelectorAll(sel));
+
   function showToast(msg) {
-    const t = document.getElementById("toast");
+    const t = $("#toast");
     if (!t) return;
     t.textContent = msg;
     t.classList.add("is-visible");
@@ -34,171 +42,111 @@
   function setNested(obj, path, val) {
     const parts = path.split(".");
     const last = parts.pop();
-    const target = parts.reduce((o, k) => (o[k] = o[k] || {}, o[k]]), obj);
+    const target = parts.reduce((o, k) => (o[k] = o[k] || ({}), o[k]), obj);
     target[last] = val;
   }
 
-  /* ---------- Load / Save ---------- */
-  function loadOverlay() {
-    try { return JSON.parse(localStorage.getItem(LS_KEY) || "null") || {}; }
-    catch (e) { return {}; }
+  function getCfg() { return window.ConfigManager.get(); }
+  function patchCfg(partial) {
+    window.ConfigManager.patch(partial);
+    showSaved();
+    applyLivePreview();
   }
-  function saveOverlay(overlay) {
-    localStorage.setItem(LS_KEY, JSON.stringify(overlay));
-  }
-  function mergedConfig() {
-    const base = JSON.parse(JSON.stringify(window.CONFIG || {}));
-    const overlay = loadOverlay();
-    if (overlay.theme) base.theme = Object.assign({}, base.theme || {}, overlay.theme);
-    if (Array.isArray(overlay.platforms)) base.platforms = overlay.platforms;
-    return Object.assign(base, overlay);
+  function showSaved() {
+    const s = $("#saveStatus");
+    if (s) {
+      s.textContent = "✓ تم الحفظ تلقائيًا";
+      s.classList.add("is-saved");
+      clearTimeout(s._t);
+      s._t = setTimeout(() => {
+        s.textContent = "كل التعديلات بتتخزن تلقائيًا";
+        s.classList.remove("is-saved");
+      }, 2000);
+    }
   }
 
-  /* ---------- Tab navigation ---------- */
+  function applyLivePreview() {
+    const cfg = getCfg();
+    if (window.ThemeManager && cfg.theme) window.ThemeManager.applyConfigTheme(cfg.theme);
+  }
+
+  /* ====== Modal helpers ====== */
+  function openModal(id) {
+    const m = document.getElementById(id);
+    if (m) { m.classList.add("is-open"); m.setAttribute("aria-hidden", "false"); }
+  }
+  function closeModal(m) {
+    if (m) { m.classList.remove("is-open"); m.setAttribute("aria-hidden", "true"); }
+  }
+  $$(".modal").forEach(m => {
+    $$("[data-close]", m).forEach(el => el.addEventListener("click", () => closeModal(m)));
+  });
+  document.addEventListener("keydown", e => {
+    if (e.key === "Escape") $$(".modal.is-open").forEach(closeModal);
+  });
+
+  /* ====== Tab navigation ====== */
   function initTabs() {
-    const navBtns = document.querySelectorAll(".admin__nav button");
-    const panels = document.querySelectorAll(".admin__content section");
-    navBtns.forEach(btn => {
+    const btns = $$(".admin__nav button");
+    const panels = $$(".admin__content section");
+    btns.forEach(btn => {
       btn.addEventListener("click", () => {
         const tab = btn.getAttribute("data-tab");
-        navBtns.forEach(b => b.classList.toggle("is-active", b === btn));
+        btns.forEach(b => b.classList.toggle("is-active", b === btn));
         panels.forEach(p => p.classList.toggle("is-active", p.getAttribute("data-panel") === tab));
       });
     });
   }
 
-  /* ---------- Fill basic + links + appearance ---------- */
+  /* ====== Fill generic data-key inputs ====== */
   function fillForm() {
-    const cfg = mergedConfig();
-    // كل [data-key]
-    document.querySelectorAll("[data-key]").forEach(el => {
+    const cfg = getCfg();
+    $$("[data-key]").forEach(el => {
       const key = el.getAttribute("data-key");
       const val = getNested(cfg, key);
-      if (val != null) el.value = val;
+      if (val != null) {
+        if (el.type === "checkbox") el.checked = val;
+        else el.value = val;
+      }
       el.addEventListener("input", () => {
-        const overlay = loadOverlay();
-        setNested(overlay, key, el.value);
-        // theme يحتاج دمج
-        if (key.startsWith("theme.")) {
-          overlay.theme = Object.assign({}, window.CONFIG.theme || {}, overlay.theme || {});
-        }
-        saveOverlay(overlay);
-        applyLivePreview();
-        document.getElementById("saveStatus").textContent = "✓ تم الحفظ تلقائيًا";
+        const v = el.type === "checkbox" ? el.checked :
+                  el.type === "color" ? el.value :
+                  el.value;
+        patchCfg(setPath(key, v));
+      });
+      el.addEventListener("change", () => {
+        const v = el.type === "checkbox" ? el.checked : el.value;
+        patchCfg(setPath(key, v));
       });
     });
 
     // Previews للصور
-    ["logo", "profileImage", "coverImage"].forEach(key => {
+    ["logo", "profileImage", "coverImage", "qrImage"].forEach(key => {
       const val = getNested(cfg, key);
-      const img = document.getElementById("preview-" + key);
-      if (img && val) { img.src = val; }
-    });
-
-    // روابط التواصل
-    const linksGrid = document.getElementById("linksGrid");
-    const meta = window.PLATFORM_META || {};
-    linksGrid.innerHTML = PLATFORM_IDS.map(id => {
-      const info = meta[id] || { name: id, desc: "" };
-      return `<label>
-        <span style="display:flex;align-items:center;gap:0.4rem;">
-          <span style="width:14px;height:14px;background:${info.color};border-radius:4px;display:inline-block;"></span>
-          ${info.name}
-        </span>
-        <input type="text" data-key="${id}" placeholder="YOUR_${id.toUpperCase()}_LINK" />
-      </label>`;
-    }).join("");
-    // إعادة ربط المستمعين للحقول الجديدة
-    linksGrid.querySelectorAll("[data-key]").forEach(el => {
-      const key = el.getAttribute("data-key");
-      el.value = getNested(cfg, key) || "";
-      el.addEventListener("input", () => {
-        const overlay = loadOverlay();
-        overlay[key] = el.value;
-        saveOverlay(overlay);
-        document.getElementById("saveStatus").textContent = "✓ تم الحفظ تلقائيًا";
-      });
+      const img = $("#preview-" + key);
+      if (img && val) img.src = val;
     });
   }
-
-  /* ---------- Platforms drag & drop ---------- */
-  function initPlatformsList() {
-    const list = document.getElementById("platformsList");
-    if (!list) return;
-    const cfg = mergedConfig();
-    let platforms = Array.isArray(cfg.platforms) ? cfg.platforms.slice() : PLATFORM_IDS.map((id, i) => ({ id, visible: true, order: i }));
-
-    function render() {
-      platforms.sort((a, b) => (a.order || 0) - (b.order || 0));
-      const meta = window.PLATFORM_META || {};
-      list.innerHTML = platforms.map((p, i) => {
-        const info = meta[p.id] || { name: p.id, color: "#888" };
-        return `<li draggable="true" data-id="${p.id}" data-idx="${i}">
-          <span class="drag-handle">⋮⋮</span>
-          <span class="platform-color" style="background:${info.color}"></span>
-          <span class="platform-name">${info.name}</span>
-          <input type="checkbox" ${p.visible ? "checked" : ""} aria-label="إظهار ${info.name}" />
-        </li>`;
-      }).join("");
-
-      list.querySelectorAll("input[type=checkbox]").forEach(cb => {
-        cb.addEventListener("change", e => {
-          const li = e.target.closest("li");
-          const id = li.getAttribute("data-id");
-          const p = platforms.find(p => p.id === id);
-          if (p) p.visible = e.target.checked;
-          savePlatforms();
-        });
-      });
-
-      // Drag
-      let dragSrc = null;
-      list.querySelectorAll("li").forEach(li => {
-        li.addEventListener("dragstart", e => {
-          dragSrc = li;
-          li.classList.add("dragging");
-          e.dataTransfer.effectAllowed = "move";
-        });
-        li.addEventListener("dragend", () => {
-          li.classList.remove("dragging");
-          list.querySelectorAll("li").forEach(x => x.classList.remove("drag-over"));
-        });
-        li.addEventListener("dragover", e => {
-          e.preventDefault();
-          if (dragSrc && dragSrc !== li) li.classList.add("drag-over");
-        });
-        li.addEventListener("dragleave", () => li.classList.remove("drag-over"));
-        li.addEventListener("drop", e => {
-          e.preventDefault();
-          if (!dragSrc || dragSrc === li) return;
-          const fromId = dragSrc.getAttribute("data-id");
-          const toId = li.getAttribute("data-id");
-          const fromIdx = platforms.findIndex(p => p.id === fromId);
-          const toIdx = platforms.findIndex(p => p.id === toId);
-          const [moved] = platforms.splice(fromIdx, 1);
-          platforms.splice(toIdx, 0, moved);
-          // re-order
-          platforms.forEach((p, i) => p.order = i);
-          savePlatforms();
-          render();
-        });
-      });
+  function setPath(path, val) {
+    // يبني object partial من dotted path
+    const partial = {};
+    const parts = path.split(".");
+    if (parts.length === 1) {
+      partial[parts[0]] = val;
+    } else {
+      let cur = partial;
+      for (let i = 0; i < parts.length - 1; i++) {
+        cur[parts[i]] = {};
+        cur = cur[parts[i]];
+      }
+      cur[parts[parts.length - 1]] = val;
     }
-
-    function savePlatforms() {
-      const overlay = loadOverlay();
-      overlay.platforms = platforms;
-      saveOverlay(overlay);
-      applyLivePreview();
-      document.getElementById("saveStatus").textContent = "✓ تم الحفظ تلقائيًا";
-    }
-
-    render();
+    return partial;
   }
 
-  /* ---------- File uploads ---------- */
+  /* ====== File uploads ====== */
   function initUploads() {
-    document.querySelectorAll("input[type=file][data-file]").forEach(input => {
+    $$("input[type=file][data-file]").forEach(input => {
       input.addEventListener("change", e => {
         const file = e.target.files[0];
         if (!file) return;
@@ -209,35 +157,196 @@
         const reader = new FileReader();
         reader.onload = ev => {
           const key = input.getAttribute("data-file");
-          const overlay = loadOverlay();
-          overlay[key] = ev.target.result;
-          saveOverlay(overlay);
-          // حدّث حقل النص والـ preview
-          const textInput = document.querySelector(`input[type=text][data-key="${key}"]`);
-          if (textInput) textInput.value = "(صورة مرفوعة)";
-          const img = document.getElementById("preview-" + key);
+          patchCfg(setPath(key, ev.target.result));
+          const textInput = $(`input[type=text][data-key="${key}"]`);
+          if (textInput) textInput.value = ev.target.result;
+          const img = $("#preview-" + key);
           if (img) img.src = ev.target.result;
-          applyLivePreview();
-          showToast("تم رفع الصورة");
+          showToast("تم رفع الصورة ✓");
         };
         reader.readAsDataURL(file);
       });
     });
   }
 
-  /* ---------- Live preview (apply on the admin theme too) ---------- */
-  function applyLivePreview() {
-    const cfg = mergedConfig();
-    if (window.ThemeManager && cfg.theme) window.ThemeManager.applyConfigTheme(cfg.theme);
+  /* ====== Platforms management ====== */
+  let currentEditIndex = -1;
+
+  function renderPlatforms() {
+    const list = $("#platformsList");
+    if (!list) return;
+    const cfg = getCfg();
+    const platforms = (cfg.platforms || []).slice().sort((a, b) => (a.order || 0) - (b.order || 0));
+
+    list.innerHTML = platforms.map((p, i) => {
+      const iconPath = window.CardsRenderer ? window.CardsRenderer.getIcon(p.icon || p.id) : "";
+      return `
+        <li draggable="true" data-idx="${i}" data-id="${p.id}">
+          <span class="drag-handle">⋮⋮</span>
+          <span class="platform-color" style="background:${p.color || '#888'}"></span>
+          <span class="platform-icon">
+            <svg viewBox="0 0 24 24">${iconPath}</svg>
+          </span>
+          <div class="platform-info">
+            <div class="platform-name">${p.name}</div>
+            <div class="platform-desc">${p.desc || ''}</div>
+          </div>
+          <input type="checkbox" ${p.visible !== false ? "checked" : ""} aria-label="إظهار ${p.name}" />
+          <button class="admin__btn admin__btn--ghost edit-btn" style="padding:0.35rem 0.7rem">تعديل</button>
+        </li>
+      `;
+    }).join("");
+
+    // ربط الأحداث
+    list.querySelectorAll("input[type=checkbox]").forEach(cb => {
+      cb.addEventListener("change", e => {
+        const li = e.target.closest("li");
+        const idx = parseInt(li.getAttribute("data-idx"));
+        const cfg = getCfg();
+        const platforms = cfg.platforms.slice().sort((a, b) => (a.order || 0) - (b.order || 0));
+        platforms[idx].visible = e.target.checked;
+        patchCfg({ platforms });
+        renderPlatforms();
+      });
+    });
+
+    list.querySelectorAll(".edit-btn").forEach(btn => {
+      btn.addEventListener("click", e => {
+        const li = e.target.closest("li");
+        const idx = parseInt(li.getAttribute("data-idx"));
+        openEditPlatform(idx);
+      });
+    });
+
+    // Drag & Drop
+    enableDrag(list);
   }
 
-  /* ---------- Export ---------- */
+  function enableDrag(list) {
+    let dragSrc = null;
+    list.querySelectorAll("li").forEach(li => {
+      li.addEventListener("dragstart", e => {
+        dragSrc = li;
+        li.classList.add("dragging");
+        e.dataTransfer.effectAllowed = "move";
+        e.dataTransfer.setData("text/plain", li.getAttribute("data-idx"));
+      });
+      li.addEventListener("dragend", () => {
+        li.classList.remove("dragging");
+        list.querySelectorAll("li").forEach(x => x.classList.remove("drag-over"));
+      });
+      li.addEventListener("dragover", e => {
+        e.preventDefault();
+        if (dragSrc && dragSrc !== li) li.classList.add("drag-over");
+      });
+      li.addEventListener("dragleave", () => li.classList.remove("drag-over"));
+      li.addEventListener("drop", e => {
+        e.preventDefault();
+        if (!dragSrc || dragSrc === li) return;
+        const fromIdx = parseInt(dragSrc.getAttribute("data-idx"));
+        const toIdx   = parseInt(li.getAttribute("data-idx"));
+        const cfg = getCfg();
+        const platforms = cfg.platforms.slice().sort((a, b) => (a.order || 0) - (b.order || 0));
+        const [moved] = platforms.splice(fromIdx, 1);
+        platforms.splice(toIdx, 0, moved);
+        platforms.forEach((p, i) => p.order = i);
+        patchCfg({ platforms });
+        renderPlatforms();
+      });
+    });
+  }
+
+  /** فتح modal تعديل منصة */
+  function openEditPlatform(idx) {
+    currentEditIndex = idx;
+    const cfg = getCfg();
+    const platforms = cfg.platforms.slice().sort((a, b) => (a.order || 0) - (b.order || 0));
+    const p = platforms[idx];
+    if (!p) return;
+
+    // ملء الحقول
+    $$("[data-pkey]").forEach(el => {
+      const key = el.getAttribute("data-pkey");
+      el.value = p[key] != null ? p[key] : "";
+    });
+
+    // ملء قائمة الأيقونات
+    const iconSelect = $("[data-pkey=icon]");
+    if (iconSelect && window.CardsRenderer) {
+      const icons = Object.keys(window.CardsRenderer.ICONS);
+      iconSelect.innerHTML = icons.map(i => `<option value="${i}">${i}</option>`).join("");
+      iconSelect.value = p.icon || p.id;
+    }
+
+    // حالة زر الحذف (لو منصة جديدة، خفيه)
+    const delBtn = $("#deletePlatformBtn");
+    if (delBtn) delBtn.style.display = idx === -1 ? "none" : "inline-flex";
+
+    openModal("platformModal");
+  }
+
+  /** إضافة منصة جديدة */
+  function addPlatform() {
+    const cfg = getCfg();
+    const platforms = cfg.platforms.slice();
+    const newId = "platform_" + Date.now();
+    const newPlatform = {
+      id: newId,
+      name: "منصة جديدة",
+      desc: "وصف قصير",
+      url: "YOUR_LINK",
+      color: "#FFBF00",
+      icon: "default",
+      visible: true,
+      order: platforms.length
+    };
+    platforms.push(newPlatform);
+    patchCfg({ platforms });
+    renderPlatforms();
+    // فتح التعديل عليها
+    const sorted = platforms.slice().sort((a, b) => (a.order || 0) - (b.order || 0));
+    openEditPlatform(sorted.findIndex(p => p.id === newId));
+  }
+
+  /** حفظ تعديلات المنصة الحالية */
+  function savePlatform() {
+    if (currentEditIndex < 0) {
+      // منصة جديدة فعلاً
+      return;
+    }
+    const cfg = getCfg();
+    const platforms = cfg.platforms.slice().sort((a, b) => (a.order || 0) - (b.order || 0));
+    const p = platforms[currentEditIndex];
+    if (!p) return;
+    $$("[data-pkey]").forEach(el => {
+      const key = el.getAttribute("data-pkey");
+      p[key] = el.value;
+    });
+    patchCfg({ platforms });
+    renderPlatforms();
+    closeModal($("#platformModal"));
+    showToast("تم حفظ المنصة ✓");
+  }
+
+  /** حذف المنصة الحالية */
+  function deletePlatform() {
+    if (currentEditIndex < 0) return;
+    if (!confirm("متأكد من حذف هذه المنصة؟")) return;
+    const cfg = getCfg();
+    const platforms = cfg.platforms.slice().sort((a, b) => (a.order || 0) - (b.order || 0));
+    platforms.splice(currentEditIndex, 1);
+    platforms.forEach((p, i) => p.order = i);
+    patchCfg({ platforms });
+    renderPlatforms();
+    closeModal($("#platformModal"));
+    showToast("تم حذف المنصة");
+  }
+
+  /* ====== Export ====== */
   function initExport() {
-    document.getElementById("exportBtn").addEventListener("click", () => {
-      const cfg = mergedConfig();
-      // تنظيف: شيل القيم اللي فاضية
-      const clean = JSON.parse(JSON.stringify(cfg));
-      const blob = new Blob([JSON.stringify(clean, null, 2)], { type: "application/json" });
+    $("#exportBtn").addEventListener("click", () => {
+      const json = window.ConfigManager.exportJSON();
+      const blob = new Blob([json], { type: "application/json" });
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
@@ -246,22 +355,21 @@
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
-      showToast("تم تصدير config.json");
+      showToast("تم تصدير config.json ✓");
     });
   }
 
-  /* ---------- Import ---------- */
+  /* ====== Import ====== */
   function initImport() {
-    document.getElementById("importInput").addEventListener("change", e => {
+    $("#importInput").addEventListener("change", e => {
       const file = e.target.files[0];
       if (!file) return;
       const reader = new FileReader();
       reader.onload = ev => {
         try {
-          const data = JSON.parse(ev.target.result);
-          saveOverlay(data);
-          showToast("تم الاستيراد. حدّث الصفحة.");
-          setTimeout(() => location.reload(), 800);
+          window.ConfigManager.importJSON(ev.target.result);
+          showToast("تم الاستيراد ✓");
+          setTimeout(() => location.reload(), 700);
         } catch (err) {
           showToast("ملف غير صالح");
         }
@@ -270,33 +378,55 @@
     });
   }
 
-  /* ---------- Reset ---------- */
-  function initReset() {
-    document.getElementById("resetBtn").addEventListener("click", () => {
-      if (!confirm("متأكد؟ هتروح كل التعديلات وترجع للإعدادات الأصلية.")) return;
-      localStorage.removeItem(LS_KEY);
-      showToast("تمت إعادة التعيين");
-      setTimeout(() => location.reload(), 800);
+  /* ====== Change credentials ====== */
+  function initChangeAuth() {
+    $("#changeAuthBtn").addEventListener("click", () => {
+      $("#newUsername").value = "";
+      $("#newPassword").value = "";
+      $("#confirmPassword").value = "";
+      openModal("authModal");
+    });
+
+    $("#saveAuthBtn").addEventListener("click", async () => {
+      const u = $("#newUsername").value.trim();
+      const p = $("#newPassword").value;
+      const c = $("#confirmPassword").value;
+      if (!u || !p) { showToast("املأ كل الحقول"); return; }
+      if (p !== c) { showToast("كلمتا المرور غير متطابقتين"); return; }
+      if (p.length < 6) { showToast("كلمة المرور يجب أن تكون 6 أحرف على الأقل"); return; }
+      await window.Auth.changeCredentials(u, p);
+      closeModal($("#authModal"));
+      showToast("تم تغيير بيانات الدخول ✓");
     });
   }
 
-  /* ---------- Save button (manual refresh) ---------- */
-  function initSaveBtn() {
-    document.getElementById("saveBtn").addEventListener("click", () => {
-      showToast("تم الحفظ. افتح الموقع لرؤية التغييرات.");
+  /* ====== Logout ====== */
+  function initLogout() {
+    $("#logoutBtn").addEventListener("click", () => {
+      if (!confirm("تسجيل الخروج؟")) return;
+      window.Auth.logout();
+      window.location.href = "../login.html";
     });
   }
 
-  /* ---------- Init ---------- */
+  /* ====== Save platform button ====== */
+  function initPlatformModal() {
+    $("#savePlatformBtn").addEventListener("click", savePlatform);
+    $("#deletePlatformBtn").addEventListener("click", deletePlatform);
+    $("#addPlatformBtn").addEventListener("click", addPlatform);
+  }
+
+  /* ====== Init ====== */
   function init() {
     initTabs();
     fillForm();
-    initPlatformsList();
+    renderPlatforms();
     initUploads();
     initExport();
     initImport();
-    initReset();
-    initSaveBtn();
+    initChangeAuth();
+    initLogout();
+    initPlatformModal();
     applyLivePreview();
   }
 
